@@ -8,3 +8,4 @@ Be sure to setup the Cityworks database datasource in the Switchyard config
 -remove .DS_Store?
 -
 # sy_cor_ccb_cw
+# sy_cor_ccb_cw2
