@@ -9,14 +9,12 @@
 package gov.raleigh.employeeservice.service.impl;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
@@ -157,7 +155,7 @@ public class RequestMessage {
     @XmlElement(name = "MeterModel", required = true)
     protected String meterModel;
     @XmlElement(name = "FieldActivityId", required = true)
-    protected BigInteger fieldActivityId;
+    protected String fieldActivityId;
     @XmlElement(name = "Status", required = true)
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlSchemaType(name = "NCName")
@@ -167,7 +165,7 @@ public class RequestMessage {
     @XmlSchemaType(name = "NCName")
     protected String dispatchGroup;
     @XmlElement(name = "ServicePointId", required = true)
-    protected BigInteger servicePointId;
+    protected String servicePointId;
     @XmlElement(name = "ServicePointType", required = true)
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlSchemaType(name = "NCName")
@@ -187,11 +185,11 @@ public class RequestMessage {
     @XmlSchemaType(name = "NCName")
     protected String route;
     @XmlElement(name = "Sequence", required = true)
-    protected BigInteger sequence;
+    protected String sequence;
     @XmlElement(name = "CustomerPhoneNumber", required = true)
     protected String customerPhoneNumber;
     @XmlElement(name = "ZipCode", required = true)
-    protected BigInteger zipCode;
+    protected String zipCode;
     @XmlElement(name = "ServicePointSourceStatus", required = true)
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlSchemaType(name = "NCName")
@@ -243,11 +241,11 @@ public class RequestMessage {
     @XmlElement(name = "Priority", required = true)
     protected String priority;
     @XmlElement(name = "MeterBadgeNumber", required = true)
-    protected BigInteger meterBadgeNumber;
+    protected String meterBadgeNumber;
     @XmlElement(name = "MeterID", required = true)
-    protected BigInteger meterID;
+    protected String meterID;
     @XmlElement(name = "ExternalID", required = true)
-    protected BigInteger externalID;
+    protected String externalID;
     @XmlElement(name = "Registers", required = true)
     protected List<Registers> registers;
     
@@ -497,10 +495,10 @@ public class RequestMessage {
      * 
      * @return
      *     possible object is
-     *     {@link BigInteger }
+     *     {@link String }
      *     
      */
-    public BigInteger getFieldActivityId() {
+    public String getFieldActivityId() {
         return fieldActivityId;
     }
 
@@ -509,10 +507,10 @@ public class RequestMessage {
      * 
      * @param value
      *     allowed object is
-     *     {@link BigInteger }
+     *     {@link String }
      *     
      */
-    public void setFieldActivityId(BigInteger value) {
+    public void setFieldActivityId(String value) {
         this.fieldActivityId = value;
     }
 
@@ -569,10 +567,10 @@ public class RequestMessage {
      * 
      * @return
      *     possible object is
-     *     {@link BigInteger }
+     *     {@link String }
      *     
      */
-    public BigInteger getServicePointId() {
+    public String getServicePointId() {
         return servicePointId;
     }
 
@@ -581,10 +579,10 @@ public class RequestMessage {
      * 
      * @param value
      *     allowed object is
-     *     {@link BigInteger }
+     *     {@link String }
      *     
      */
-    public void setServicePointId(BigInteger value) {
+    public void setServicePointId(String value) {
         this.servicePointId = value;
     }
 
@@ -713,10 +711,10 @@ public class RequestMessage {
      * 
      * @return
      *     possible object is
-     *     {@link BigInteger }
+     *     {@link String }
      *     
      */
-    public BigInteger getSequence() {
+    public String getSequence() {
         return sequence;
     }
 
@@ -725,10 +723,10 @@ public class RequestMessage {
      * 
      * @param value
      *     allowed object is
-     *     {@link BigInteger }
+     *     {@link String }
      *     
      */
-    public void setSequence(BigInteger value) {
+    public void setSequence(String value) {
         this.sequence = value;
     }
 
@@ -761,10 +759,10 @@ public class RequestMessage {
      * 
      * @return
      *     possible object is
-     *     {@link BigInteger }
+     *     {@link String }
      *     
      */
-    public BigInteger getZipCode() {
+    public String getZipCode() {
         return zipCode;
     }
 
@@ -773,10 +771,10 @@ public class RequestMessage {
      * 
      * @param value
      *     allowed object is
-     *     {@link BigInteger }
+     *     {@link String }
      *     
      */
-    public void setZipCode(BigInteger value) {
+    public void setZipCode(String value) {
         this.zipCode = value;
     }
 
@@ -1145,10 +1143,10 @@ public class RequestMessage {
      * 
      * @return
      *     possible object is
-     *     {@link BigInteger }
+     *     {@link String }
      *     
      */
-    public BigInteger getMeterBadgeNumber() {
+    public String getMeterBadgeNumber() {
         return meterBadgeNumber;
     }
 
@@ -1157,10 +1155,10 @@ public class RequestMessage {
      * 
      * @param value
      *     allowed object is
-     *     {@link BigInteger }
+     *     {@link String }
      *     
      */
-    public void setMeterBadgeNumber(BigInteger value) {
+    public void setMeterBadgeNumber(String value) {
         this.meterBadgeNumber = value;
     }
 
@@ -1169,10 +1167,10 @@ public class RequestMessage {
      * 
      * @return
      *     possible object is
-     *     {@link BigInteger }
+     *     {@link String }
      *     
      */
-    public BigInteger getMeterID() {
+    public String getMeterID() {
         return meterID;
     }
 
@@ -1181,10 +1179,10 @@ public class RequestMessage {
      * 
      * @param value
      *     allowed object is
-     *     {@link BigInteger }
+     *     {@link String }
      *     
      */
-    public void setMeterID(BigInteger value) {
+    public void setMeterID(String value) {
         this.meterID = value;
     }
 
@@ -1193,10 +1191,10 @@ public class RequestMessage {
      * 
      * @return
      *     possible object is
-     *     {@link BigInteger }
+     *     {@link String }
      *     
      */
-    public BigInteger getExternalID() {
+    public String getExternalID() {
         return externalID;
     }
 
@@ -1205,10 +1203,10 @@ public class RequestMessage {
      * 
      * @param value
      *     allowed object is
-     *     {@link BigInteger }
+     *     {@link String }
      *     
      */
-    public void setExternalID(BigInteger value) {
+    public void setExternalID(String value) {
         this.externalID = value;
     }
 

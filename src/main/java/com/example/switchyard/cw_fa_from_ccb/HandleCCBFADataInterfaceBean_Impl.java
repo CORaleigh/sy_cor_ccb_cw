@@ -1,13 +1,9 @@
 package com.example.switchyard.cw_fa_from_ccb;
 
-import gov.raleigh.employeeservice.service.impl.Registers;
 import gov.raleigh.employeeservice.service.impl.RequestMessage;
 
 import java.io.StringReader;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -17,10 +13,6 @@ import javax.json.JsonObject;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlSchemaType;
-import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.switchyard.component.bean.Reference;
 import org.switchyard.component.bean.Service;
@@ -55,6 +47,7 @@ public class HandleCCBFADataInterfaceBean_Impl implements
 		
 		try {
 			boolean compoundMeter = false;
+			boolean workCompleted = false;
 			JAXBContext jaxc = JAXBContext.newInstance("gov.raleigh.employeeservice.service.impl");
 			Unmarshaller unmarshaller = jaxc.createUnmarshaller();
 			StringReader reader = new StringReader(messagebody);
@@ -69,7 +62,7 @@ public class HandleCCBFADataInterfaceBean_Impl implements
 						
 		    // external ID is the Work Order number returning from Cityworks when a new work order is created
 		    // CC&B stores this work order number in the 'external ID' field in CC&B
-			BigInteger externalID = request.getExternalID();		
+			String externalID = request.getExternalID();		
 
 			// JsonBuilderFactory can't handle nulls, pre-check for null values and send over a space character
 			String statusIn = request.getStatus();
@@ -101,7 +94,7 @@ public class HandleCCBFADataInterfaceBean_Impl implements
 				customerPhone = " ";					    
 							
 			// Handle creation of new Work Orders in Cityworks
-			if (externalID == null && compoundMeter == false) {
+			if (externalID == null && compoundMeter == false && workCompleted == false) {
 			System.out.println("This is an Insert for a single meter");	
 			Map config = new HashMap();
 			JsonBuilderFactory factory = Json.createBuilderFactory(config);
@@ -188,10 +181,12 @@ public class HandleCCBFADataInterfaceBean_Impl implements
 			woID = response.getString("message");
 			
 			System.out.println("response " + response +"\n" + "woID = " + woID);
+			workCompleted = true;
+			return "<ResponseMessage><WorkOrderId>" + woID + "</WorkOrderId></ResponseMessage>";
 			}	
 
 			// Build message just for Compound meters
-			if (externalID == null && compoundMeter == true) {			
+			if (externalID == null && compoundMeter == true && workCompleted == false) {			
 			System.out.println("This is an Insert for a compound meter");
 			
 			Map config = new HashMap();
@@ -285,10 +280,12 @@ public class HandleCCBFADataInterfaceBean_Impl implements
 				woID = response.getString("message");
 				
 				System.out.println("response " + response +"\n" + "woID = " + woID);
+				workCompleted = true;
+				return "<ResponseMessage><WorkOrderId>" + woID + "</WorkOrderId></ResponseMessage>";
 			}
 			
 			// Handle Updating a Work Order in Cityworks
-						if (externalID != null && compoundMeter == true) {
+						if (externalID != null && compoundMeter == true && workCompleted == false) {
 							System.out.println("This is an Update for a compound meter");
 							Map config = new HashMap();
 							JsonBuilderFactory factory = Json.createBuilderFactory(config);
@@ -376,11 +373,12 @@ public class HandleCCBFADataInterfaceBean_Impl implements
 								   System.out.println("response from update " + response);
 								   System.out.println("json update sample " + value +"\n");
 						
+								   workCompleted = true;
 							    return "<ResponseMessage><WorkOrderId>" + request.getExternalID() + "</WorkOrderId></ResponseMessage>";
 						}
 			
 			// Handle Updating a Work Order in Cityworks
-			if (externalID != null && compoundMeter == false) {
+			if (externalID != null && compoundMeter == false && workCompleted == false) {
 				System.out.println("This is an Update for a single meter");
 				Map config = new HashMap();
 				JsonBuilderFactory factory = Json.createBuilderFactory(config);
@@ -461,7 +459,8 @@ public class HandleCCBFADataInterfaceBean_Impl implements
 					   JsonObject response = invokeCWUpdateWOServiceInterface.updateWO(value);	
 					   System.out.println("response from update " + response);
 					   System.out.println("json update sample " + value +"\n");
-			
+					   
+					   workCompleted = true;
 				    return "<ResponseMessage><WorkOrderId>" + request.getExternalID() + "</WorkOrderId></ResponseMessage>";
 			}
 			
