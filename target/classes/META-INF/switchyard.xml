@@ -11,21 +11,21 @@
             <sca:interface.java interface="com.example.switchyard.cw_fa_from_ccb.InvokeCWCreateWOServiceInterface"/>
             <resteasy:binding.rest name="rest1">
                 <resteasy:interfaces>com.example.switchyard.cw_fa_from_ccb.InvokeCWCreateWOServiceInterface</resteasy:interfaces>
-                <resteasy:address>http://rhsoadevapplv1:8080/switchyard-meter/createwo</resteasy:address>
+                <resteasy:address>http://rhsoatstapp1:8080/switchyard-meter/createwo</resteasy:address>
             </resteasy:binding.rest>
         </sca:reference>
         <sca:reference multiplicity="0..1" name="InvokeCWUpdateWOServiceInterface" promote="HandleCCBFADataInterfaceBean_Impl/InvokeCWUpdateWOServiceInterface">
             <sca:interface.java interface="com.example.switchyard.cw_fa_from_ccb.InvokeCWUpdateWOServiceInterface"/>
             <resteasy:binding.rest name="rest2">
                 <resteasy:interfaces>com.example.switchyard.cw_fa_from_ccb.InvokeCWUpdateWOServiceInterface</resteasy:interfaces>
-                <resteasy:address>http://rhsoadevapplv1:8080/switchyard-meter/updatewo</resteasy:address>
+                <resteasy:address>http://rhsoatstapp1:8080/switchyard-meter/updatewo</resteasy:address>
             </resteasy:binding.rest>
         </sca:reference>
         <sca:reference multiplicity="0..1" name="InvokeCWDeleteWOServiceInterface" promote="HandleCCBFADataInterfaceBean_Impl/InvokeCWDeleteWOServiceInterface">
             <sca:interface.java interface="com.example.switchyard.cw_fa_from_ccb.InvokeCWDeleteWOServiceInterface"/>
             <resteasy:binding.rest name="rest1">
                 <resteasy:interfaces>com.example.switchyard.cw_fa_from_ccb.InvokeCWDeleteWOServiceInterface</resteasy:interfaces>
-                <resteasy:address>http://rhsoadevapplv1:8080/switchyard-meter/deletewo</resteasy:address>
+                <resteasy:address>http://rhsoatstapp1:8080/switchyard-meter/deletewo</resteasy:address>
             </resteasy:binding.rest>
         </sca:reference>
         <sca:component name="HandleCCBFADataInterfaceBean_Impl">
