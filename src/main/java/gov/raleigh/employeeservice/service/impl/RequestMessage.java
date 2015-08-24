@@ -9,8 +9,13 @@
 package gov.raleigh.employeeservice.service.impl;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -619,7 +624,20 @@ public class RequestMessage {
      *     
      */
     public String getScheduledDate() {
-        return scheduledDate;
+    	// Date comes from CC&B in this format 2015-08-03-00.00.00
+    	DateFormat ccbDateFormat = new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss", Locale.ENGLISH);   	
+    	DateFormat cityWorksDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.ENGLISH);
+
+        Date date = null;
+		try {
+			date = ccbDateFormat.parse(scheduledDate);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        String formattedDate = cityWorksDateFormat.format(date); 
+
+    	return formattedDate;
     }
 
     /**

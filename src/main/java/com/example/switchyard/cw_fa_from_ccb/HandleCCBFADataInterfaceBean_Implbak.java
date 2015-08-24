@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonBuilderFactory;
 import javax.json.JsonObject;
+import javax.json.JsonValue;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -24,7 +25,7 @@ import org.switchyard.component.bean.Service;
  * and converts to json and invokes CRUD on work orders in Cityworks
  */
 @Service(HandleCCBFADataInterface.class)
-public class HandleCCBFADataInterfaceBean_Impl implements
+public class HandleCCBFADataInterfaceBean_Implbak implements
 		HandleCCBFADataInterface {
 	
 	@Inject
@@ -42,7 +43,7 @@ public class HandleCCBFADataInterfaceBean_Impl implements
 	
 	@Override
 	public String getMessage(String messagebody) {
-		String woID = null;
+		JsonValue woID = null;
 		String canceledStatus = "Canceled";
 		
 		try {
@@ -91,24 +92,8 @@ public class HandleCCBFADataInterfaceBean_Impl implements
 			
 			String customerPhone = request.getCustomerPhoneNumber();
 			if (customerPhone == null)
-				customerPhone = " ";			
-			
-			String templateID = "257702";
-			
-			String faTypeID = request.getFAType();
-			
-			if (faTypeID .equals("MTR_REMV") || equals("SEV_REM")) {
-					templateID = "257700";
-			}
-					
-			if (faTypeID .equals("SEV_INS") || equals("START_BS") || equals("START_IN"))
-				templateID = "257701";	
-			
-			System.out.println("faTypeID = " + faTypeID);
-			
-			System.out.println("TemplateID = " + templateID);
-			
-			
+				customerPhone = " ";					    
+							
 			// Handle creation of new Work Orders in Cityworks
 			if (externalID == null && compoundMeter == false && workCompleted == false) {
 			System.out.println("This is an Insert for a single meter");	
@@ -172,10 +157,10 @@ public class HandleCCBFADataInterfaceBean_Impl implements
 				     .add("CityLimit", request.getCityLimit())
 				     .add("UseClass", request.getUseClass())
 				     .add("Postal", request.getZipCode())
-//				     .add("FARemark", factory.createObjectBuilder().add("Code","X-NOTES-CM"))
+				     .add("FARemark", factory.createObjectBuilder().add("Code","X-NOTES-CM"))
 				     .add("SPSourceStatus", factory.createObjectBuilder().add("Code", request.getServicePointSourceStatus().substring(0, 1)))
 				     .add("DisconnectLocation", factory.createObjectBuilder().add("Code","METR"))
-				     .add("DispatchGroup", request.getDispatchGroup())
+				     .addNull("DispatchGroup")
 				     .add("SPId", request.getServicePointId())
 				     .addNull("StockLocation")
 				     .addNull("AdjustmentType")
@@ -186,9 +171,8 @@ public class HandleCCBFADataInterfaceBean_Impl implements
 				     .addNull("ToDoValue")
 				     .add("WorkOrderId", "1")
 				     .add("Route", request.getRoute())
-				     .addNull("RouteSequenceStart")
-				     .addNull("RouteSequenceEnd")
-				     .add("FAClass", request.getFAClass()))
+				     .add("RouteSequenceStart", "MAY")
+				     .add("RouteSequenceEnd", "JUNE"))
 				     .add("WorkOrder", factory.createObjectBuilder()
 				    		 .add("WorkOrderId", "1")
 				    		 .add("DomainId", "284008")
@@ -196,7 +180,7 @@ public class HandleCCBFADataInterfaceBean_Impl implements
 				    		 .add("Supervisor", "")
 				    		 .add("RequestedBy", "")
 				    		 .add("InitiatedBy", "")
- 				    		 .add("InitiateDate", request.getScheduledDate())
+				    		 .add("InitiateDate", request.getScheduledDate().substring(0,10))
 				    		 .add("Location", "")
 				    		 .add("ProjectStartDate", "")
 				    		 .add("ProjectFinishDate", "")
@@ -204,11 +188,11 @@ public class HandleCCBFADataInterfaceBean_Impl implements
 				    		 .add("NumDaysBefore", "1")
 				    		 .add("WoCategory", "")
 				       		 .add("SubmitTo", " ")
-				    		 .add("Status", "INITIATED")
-				    		 .add("WoTemplateId", templateID)
-				    		 .add("WoAddress", request.getServiceAddress()))
-//				    		 .add("WoXCoordinate", request.getXCoordinate())
-//				    		 .add("WoYCoordinate", request.getYCoordinate()))
+				    		 .add("Status", "Initiated")
+				    		 .add("WoTemplateId", "257702")
+				    		 .add("WoAddress", request.getServiceAddress())
+				    		 .add("WoXCoordinate", request.getXCoordinate())
+				    		 .add("WoYCoordinate", request.getYCoordinate()))
 				     .build();
 			
 			// ugly print the json
@@ -217,8 +201,8 @@ public class HandleCCBFADataInterfaceBean_Impl implements
 			JsonObject response = invokeCWCreateWOServiceInterface.createWO(value);
 			System.out.println("response = " + response +"\n");
 			
-			woID = response.getString("message");
-			// woID = response.get("message");
+			//woID = response.getString("message");
+			woID = response.get("message");
 			
 			System.out.println("response " + response +"\n" + "woID = " + woID);
 			workCompleted = true;
@@ -303,10 +287,10 @@ public class HandleCCBFADataInterfaceBean_Impl implements
 				     .add("CityLimit", request.getCityLimit())
 				     .add("UseClass", request.getUseClass())
 				     .add("Postal", request.getZipCode())
-//			     .add("FARemark", factory.createObjectBuilder().add("Code","X-NOTES-CM"))
+				     .add("FARemark", factory.createObjectBuilder().add("Code","X-NOTES-CM"))
 				     .add("SPSourceStatus", factory.createObjectBuilder().add("Code", request.getServicePointSourceStatus().substring(0, 1)))
 				     .add("DisconnectLocation", factory.createObjectBuilder().add("Code","METR"))
-				     .add("DispatchGroup", request.getDispatchGroup())
+				     .addNull("DispatchGroup")
 				     .add("SPId", request.getServicePointId())
 				     .addNull("StockLocation")
 				     .addNull("AdjustmentType")
@@ -317,9 +301,8 @@ public class HandleCCBFADataInterfaceBean_Impl implements
 				     .addNull("ToDoValue")
 				     .add("WorkOrderId", "1")
 				     .add("Route", request.getRoute())
-				     .addNull("RouteSequenceStart")
-				     .addNull("RouteSequenceEnd")
-				     .add("FAClass", request.getFAClass()))
+				     .add("RouteSequenceStart", "MAY")
+				     .add("RouteSequenceEnd", "JUNE"))
 				     .add("WorkOrder", factory.createObjectBuilder()
 				    		 .add("WorkOrderId", "1")
 				    		 .add("DomainId", "284008")
@@ -327,7 +310,7 @@ public class HandleCCBFADataInterfaceBean_Impl implements
 				    		 .add("Supervisor", "")
 				    		 .add("RequestedBy", "")
 				    		 .add("InitiatedBy", "")
-				    		 .add("InitiateDate", request.getScheduledDate())
+				    		 .add("InitiateDate", request.getScheduledDate().substring(0,10))
 				    		 .add("Location", "")
 				    		 .add("ProjectStartDate", "")
 				    		 .add("ProjectFinishDate", "")
@@ -335,11 +318,11 @@ public class HandleCCBFADataInterfaceBean_Impl implements
 				    		 .add("NumDaysBefore", "1")
 				    		 .add("WoCategory", "")
 				       		 .add("SubmitTo", " ")
-				    		 .add("Status", "INITIATED")
-				    		 .add("WoTemplateId", templateID)
-				    		 .add("WoAddress", request.getServiceAddress()))
-//				    		 .add("WoXCoordinate", request.getXCoordinate())
-//				    		 .add("WoYCoordinate", request.getYCoordinate()))
+				    		 .add("Status", "Initiated")
+				    		 .add("WoTemplateId", "257702")
+				    		 .add("WoAddress", request.getServiceAddress())
+				    		 .add("WoXCoordinate", request.getXCoordinate())
+				    		 .add("WoYCoordinate", request.getYCoordinate()))
 				     .build();
 			
 				// ugly print the json
@@ -348,8 +331,8 @@ public class HandleCCBFADataInterfaceBean_Impl implements
 				JsonObject response = invokeCWCreateWOServiceInterface.createWO(value);
 				System.out.println("response = " + response +"\n");
 				
-				woID = response.getString("message");
-			//	woID = response.get("message");
+				//woID = response.getString("message");
+				woID = response.get("message");
 				
 				System.out.println("response " + response +"\n" + "woID = " + woID);
 				workCompleted = true;
@@ -434,10 +417,10 @@ public class HandleCCBFADataInterfaceBean_Impl implements
 								     .add("CityLimit", request.getCityLimit())
 								     .add("UseClass", request.getUseClass())
 								     .add("Postal", request.getZipCode())
-				//				     .add("FARemark", factory.createObjectBuilder().add("Code","X-NOTES-CM"))
+								     .add("FARemark", factory.createObjectBuilder().add("Code","X-NOTES-CM"))
 						    	     .add("SPSourceStatus", factory.createObjectBuilder().add("Code", request.getServicePointSourceStatus().substring(0, 1)))
 								     .add("DisconnectLocation", factory.createObjectBuilder().add("Code","METR"))
-					                 .add("DispatchGroup", request.getDispatchGroup())
+								     .addNull("DispatchGroup")
 								     .add("SPId", request.getServicePointId())
 								     .addNull("StockLocation")
 								     .addNull("AdjustmentType")
@@ -448,9 +431,8 @@ public class HandleCCBFADataInterfaceBean_Impl implements
 								     .addNull("ToDoValue")
 								     .add("WorkOrderId", request.getExternalID())		     
 								     .add("Route", request.getRoute())
-								     .addNull("RouteSequenceStart")
-								     .addNull("RouteSequenceEnd")
-								     .add("FAClass", request.getFAClass()))
+								     .add("RouteSequenceStart", "MAY")
+								     .add("RouteSequenceEnd", "JUNE"))
 								     .add("WorkOrder", factory.createObjectBuilder()
 								    		 .add("WorkOrderId", request.getExternalID())
 								    		 .add("DomainId", "284008")
@@ -458,7 +440,7 @@ public class HandleCCBFADataInterfaceBean_Impl implements
 								    		 .add("Supervisor", "")
 								    		 .add("RequestedBy", "")
 								    		 .add("InitiatedBy", "")
-								    		 .add("InitiateDate", request.getScheduledDate())
+								    		 .add("InitiateDate", request.getScheduledDate().substring(0,10))
 								    		 .add("Location", "")
 								    		 .add("ProjectStartDate", "")
 								    		 .add("ProjectFinishDate", "")
@@ -467,10 +449,10 @@ public class HandleCCBFADataInterfaceBean_Impl implements
 								    		 .add("WoCategory", "")
 								    		 .add("SubmitTo" , " ")
 								    		 .add("Status", statusIn)
-								    		 .add("WoTemplateId", templateID)
-								    		 .add("WoAddress", request.getServiceAddress()))
-//								    		 .add("WoXCoordinate", request.getXCoordinate())
-//								    		 .add("WoYCoordinate", request.getYCoordinate()))
+								    		 .add("WoTemplateId", "257702")
+								    		 .add("WoAddress", request.getServiceAddress())
+								    		 .add("WoXCoordinate", request.getXCoordinate())
+								    		 .add("WoYCoordinate", request.getYCoordinate()))
 								     .build();
 							
 							       System.out.println("External ID " + externalID);
@@ -511,9 +493,9 @@ public class HandleCCBFADataInterfaceBean_Impl implements
 				    		 .add("Miu", request.getRegisters().get(0).getMIU())
 				    		 .add("ReadType", factory.createObjectBuilder().add("Code", request.getRegisters().get(0).getReadType()))
 				    		 .add("MrSource", factory.createObjectBuilder().add("Code", request.getRegisters().get(0).getMrSource()))
-				    		 .add("Size", factory.createObjectBuilder().add("Code", request.getRegisters().get(0).getRegisterSize()))) 
-			//	    	     .add("LowReadThreshold", request.getRegisters().get(0).getLowMeterReadingWarning().toBigInteger())
-	    	//	    		 .add("HighReadThreshold", request.getRegisters().get(0).getHighMeterReadingWarning().toBigInteger()))
+				    		 .add("Size", factory.createObjectBuilder().add("Code", request.getRegisters().get(0).getRegisterSize())) 
+				    	     .add("LowReadThreshold", request.getRegisters().get(0).getLowMeterReadingWarning().toBigInteger())
+				    		 .add("HighReadThreshold", request.getRegisters().get(0).getHighMeterReadingWarning().toBigInteger()))
 				    		 .addNull("Register2")
 				    	 	 .addNull("DeviceTest"))
 				     .add("CurrentMeter", factory.createObjectBuilder()
@@ -522,7 +504,7 @@ public class HandleCCBFADataInterfaceBean_Impl implements
 					     .add("RemoveMeter", "false")
 					     .addNull("IsDeviceTest") 
 					     .add("CompoundMtr", compoundMeter) 
-					     .add("ReadDateTime", "true")
+					     .add("ReadDateTime", "true") 
 					     .add("Size", factory.createObjectBuilder().add("Code", request.getMeterSize()))
 					    	 .add("Register1", factory.createObjectBuilder() 
 				    		 .addNull("Reading")
@@ -530,9 +512,9 @@ public class HandleCCBFADataInterfaceBean_Impl implements
 				    		 .add("Miu", request.getRegisters().get(0).getMIU())
 				    		 .addNull("ReadType")
 				    		 .addNull("MrSource")
-				    		 .add("Size", factory.createObjectBuilder().add("Code", request.getRegisters().get(0).getRegisterSize()))) 
-				  //  	     .add("LowReadThreshold", request.getRegisters().get(0).getLowMeterReadingWarning().toBigInteger())
-				  //  		 .add("HighReadThreshold", request.getRegisters().get(0).getHighMeterReadingWarning().toBigInteger()))
+				    		 .add("Size", factory.createObjectBuilder().add("Code", request.getRegisters().get(0).getRegisterSize())) 
+				    	     .add("LowReadThreshold", request.getRegisters().get(0).getLowMeterReadingWarning().toBigInteger())
+				    		 .add("HighReadThreshold", request.getRegisters().get(0).getHighMeterReadingWarning().toBigInteger()))
 				    		 .addNull("Register2")
 				    	 	 .addNull("DeviceTest"))
 					     .addNull("InstallMeter")
@@ -546,10 +528,10 @@ public class HandleCCBFADataInterfaceBean_Impl implements
 					     .add("CityLimit", request.getCityLimit())
 					     .add("UseClass", request.getUseClass())
 					     .add("Postal", request.getZipCode())
-			//		     .add("FARemark", factory.createObjectBuilder().add("Code","X-NOTES-CM"))
+					     .add("FARemark", factory.createObjectBuilder().add("Code","X-NOTES-CM"))
 			    	     .add("SPSourceStatus", factory.createObjectBuilder().add("Code", request.getServicePointSourceStatus().substring(0, 1)))
 					     .add("DisconnectLocation", factory.createObjectBuilder().add("Code","METR"))
-					     .add("DispatchGroup", request.getDispatchGroup())
+					     .addNull("DispatchGroup")
 					     .add("SPId", request.getServicePointId())
 					     .addNull("StockLocation")
 					     .addNull("AdjustmentType")
@@ -560,9 +542,8 @@ public class HandleCCBFADataInterfaceBean_Impl implements
 					     .addNull("ToDoValue")
 					     .add("WorkOrderId", request.getExternalID())
 					     .add("Route", request.getRoute())
-					     .addNull("RouteSequenceStart")
-					     .addNull("RouteSequenceEnd")
-				         .add("FAClass", request.getFAClass()))					     
+					     .add("RouteSequenceStart", "MAY")
+					     .add("RouteSequenceEnd", "JUNE"))
 					     .add("WorkOrder", factory.createObjectBuilder()
 					    		 .add("WorkOrderId", request.getExternalID())
 					    		 .add("DomainId", "284008")
@@ -570,7 +551,7 @@ public class HandleCCBFADataInterfaceBean_Impl implements
 					    		 .add("Supervisor", "")
 					    		 .add("RequestedBy", "")
 					    		 .add("InitiatedBy", "")
-					    		 .add("InitiateDate", request.getScheduledDate())
+					    		 .add("InitiateDate", request.getScheduledDate().substring(0,10))
 					    		 .add("Location", "")
 					    		 .add("ProjectStartDate", "")
 					    		 .add("ProjectFinishDate", "")
@@ -579,10 +560,10 @@ public class HandleCCBFADataInterfaceBean_Impl implements
 					    		 .add("WoCategory", "")
 					    		 .add("SubmitTo" , " ")
 					    		 .add("Status", statusIn)
-					    		 .add("WoTemplateId", templateID)
-					    		 .add("WoAddress", request.getServiceAddress()))
-//					    		 .add("WoXCoordinate", request.getXCoordinate())
-//					    		 .add("WoYCoordinate", request.getYCoordinate()))
+					    		 .add("WoTemplateId", "257702")
+					    		 .add("WoAddress", request.getServiceAddress())
+					    		 .add("WoXCoordinate", request.getXCoordinate())
+					    		 .add("WoYCoordinate", request.getYCoordinate()))
 					     .build();
 				
 				       System.out.println("External ID " + externalID);
