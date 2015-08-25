@@ -111,7 +111,8 @@ public class HandleCCBFADataInterfaceBean_Impl implements
 			
 			// Handle creation of new Work Orders in Cityworks
 			if (externalID == null && compoundMeter == false && workCompleted == false) {
-			System.out.println("This is an Insert for a single meter");	
+			System.out.println("This is an Insert for a single meter testing 123");	
+			System.out.println("schedule date = " + request.getScheduledDate());	
 			Map config = new HashMap();
 			JsonBuilderFactory factory = Json.createBuilderFactory(config);
 			//buildJsonString(request, compoundMeter);  // can we make a generic method to building all json?

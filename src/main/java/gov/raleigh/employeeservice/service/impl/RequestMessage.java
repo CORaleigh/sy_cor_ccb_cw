@@ -623,6 +623,18 @@ public class RequestMessage {
      *     {@link String }
      *     
      */
+//    public String getScheduledDate() {
+//    return scheduledDate;
+//    }
+
+    /**
+     * Gets the value of the scheduledDate property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
     public String getScheduledDate() {
     	// Date comes from CC&B in this format 2015-08-03-00.00.00
     	DateFormat ccbDateFormat = new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss", Locale.ENGLISH);   	
@@ -640,6 +652,9 @@ public class RequestMessage {
     	return formattedDate;
     }
 
+
+    
+    
     /**
      * Sets the value of the scheduledDate property.
      * 
